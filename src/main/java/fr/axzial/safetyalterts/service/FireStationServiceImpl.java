@@ -29,15 +29,13 @@ public class FireStationServiceImpl implements FireStationService {
     private static final int LEGAL_AGE = 18;
 
     private final FireStationRepository fireStationRepository;
-    private final FireStationService fireStationService;
     private final MedicalRecordService medicalRecordService;
     private final PersonService personService;
     EntityManager entityManager;
     ModelMapper modelMapper;
 
-    public FireStationServiceImpl(FireStationRepository fireStationRepository, FireStationService fireStationService, MedicalRecordService medicalRecordService, PersonService personService, EntityManager entityManager) {
+    public FireStationServiceImpl(FireStationRepository fireStationRepository, MedicalRecordService medicalRecordService, PersonService personService, EntityManager entityManager) {
         this.fireStationRepository = fireStationRepository;
-        this.fireStationService = fireStationService;
         this.medicalRecordService = medicalRecordService;
         this.personService = personService;
         this.entityManager = entityManager;
@@ -69,7 +67,7 @@ public class FireStationServiceImpl implements FireStationService {
 
     @Override
     public FireStationCountDto getUsersFromFireStation(String stationNumber){
-        FireStation fireStation = fireStationService.getFireStationByStation(stationNumber).orElseThrow(FireStationNotFoundException::new);
+        FireStation fireStation = getFireStationByStation(stationNumber).orElseThrow(FireStationNotFoundException::new);
         List<Person> personList = personService.getPersonByCity(fireStation.getAddress());
         List<MedicalRecord> medicalRecords = medicalRecordService.getRecordsFromPersons(personList);
         long minors = medicalRecords.stream()
@@ -79,7 +77,7 @@ public class FireStationServiceImpl implements FireStationService {
 
     @Override
     public Map<String, List<Person>> getFireStationWithPersons(List<String> stations){
-        List<FireStation> fireStations = fireStationService.getFireStationByIds(stations);
+        List<FireStation> fireStations = getFireStationByIds(stations);
         List<Person> personList = personService.getPersonByCities(fireStations.stream().map(FireStation::getAddress).collect(Collectors.toList()));
         return personList.stream().collect(Collectors.groupingBy(Person::getAddress, Collectors.toList()));
     }

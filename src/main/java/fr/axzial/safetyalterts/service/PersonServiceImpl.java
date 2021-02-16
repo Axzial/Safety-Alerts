@@ -19,13 +19,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class PersonServiceImpl implements PersonService {
 
-    PersonRepository personRepository;
-    PersonService personService;
-    EntityManager entityManager;
+    private final PersonRepository personRepository;
+    private final EntityManager entityManager;
 
-    public PersonServiceImpl(PersonRepository personRepository, PersonService personService, EntityManager entityManager) {
+    public PersonServiceImpl(PersonRepository personRepository, EntityManager entityManager) {
         this.personRepository = personRepository;
-        this.personService = personService;
         this.entityManager = entityManager;
     }
 
@@ -64,14 +62,14 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<String> getCityMails(String city){
-        List<String> mails = personService.getMailsByCity(city);
+        List<String> mails = getMailsByCity(city);
         if (mails.isEmpty()) throw new MailNotFoundException();
         return mails;
     }
 
     @Override
     public List<Person> getPersonsInfos(String firstName, String lastName){
-        List<Person> persons = personService.getPersonsByNames(firstName, lastName);
+        List<Person> persons = getPersonsByNames(firstName, lastName);
         if (persons.isEmpty()) throw new PersonNotFoundException();
         return persons;
     }
