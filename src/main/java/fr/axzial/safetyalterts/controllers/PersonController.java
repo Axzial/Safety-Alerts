@@ -1,14 +1,8 @@
 package fr.axzial.safetyalterts.controllers;
 
-import fr.axzial.safetyalterts.exception.MailNotFoundException;
-import fr.axzial.safetyalterts.exception.PersonNotFoundException;
 import fr.axzial.safetyalterts.model.Person;
 import fr.axzial.safetyalterts.service.PersonService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,8 +23,8 @@ public class PersonController {
      * @return
      */
     @GetMapping("/communityEmails")
-    public ResponseEntity<List<String>> getCityMails(@RequestParam(name = "city", required = true) String city){
-        return ResponseEntity.ok(personService.getMailsByCity(city));
+    public List<String> getCityMails(@RequestParam(name = "city", required = true) String city){
+        return personService.getMailsByCity(city);
     }
 
     /**
@@ -42,9 +36,9 @@ public class PersonController {
      * @return
      */
     @GetMapping("personInfo")
-    public ResponseEntity<List<Person>> getPersonsInfos(@RequestParam(name = "firstName") String firstName,
+    public List<Person> getPersonsInfos(@RequestParam(name = "firstName") String firstName,
     @RequestParam(name = "lastName") String lastName){
-        return ResponseEntity.ok(personService.getPersonsInfos(firstName, lastName));
+        return personService.getPersonsInfos(firstName, lastName);
     }
 
 }

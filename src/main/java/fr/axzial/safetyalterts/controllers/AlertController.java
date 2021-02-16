@@ -1,32 +1,13 @@
 package fr.axzial.safetyalterts.controllers;
 
-import fr.axzial.safetyalterts.dto.ChildMedicalRecordDto;
 import fr.axzial.safetyalterts.dto.FireStationMedicalRecordsDto;
 import fr.axzial.safetyalterts.dto.FireStationPersonsDto;
 import fr.axzial.safetyalterts.dto.FireStationPersonsPhoneDto;
-import fr.axzial.safetyalterts.exception.FireStationNotFoundException;
-import fr.axzial.safetyalterts.mapper.MedicalRecordMapper;
-import fr.axzial.safetyalterts.model.FireStation;
-import fr.axzial.safetyalterts.model.MedicalRecord;
-import fr.axzial.safetyalterts.model.Person;
 import fr.axzial.safetyalterts.service.AlertService;
-import fr.axzial.safetyalterts.service.FireStationService;
-import fr.axzial.safetyalterts.service.MedicalRecordService;
-import fr.axzial.safetyalterts.service.PersonService;
-import fr.axzial.safetyalterts.util.TimeUtils;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/alert")
@@ -34,7 +15,7 @@ public class AlertController {
 
     private final AlertService alertService;
 
-    public AlertController(FireStationService fireStationService, PersonService personService, AlertService alertService, MedicalRecordService medicalRecordService) {
+    public AlertController(AlertService alertService) {
         this.alertService = alertService;
     }
 
@@ -46,8 +27,8 @@ public class AlertController {
      * @return
      */
     @GetMapping("/fire")
-    public ResponseEntity<FireStationPersonsDto> alertFire(@RequestParam(name = "address") String address){
-        return ResponseEntity.ok(alertService.alertFire(address));
+    public FireStationPersonsDto alertFire(@RequestParam(name = "address") String address){
+        return alertService.alertFire(address);
     }
 
     /**
@@ -57,8 +38,8 @@ public class AlertController {
      * @return
      */
     @GetMapping("/phoneAlert")
-    public ResponseEntity<FireStationPersonsPhoneDto> alertPhone(@RequestParam(name = "fireStation") String station){
-        return ResponseEntity.ok(alertService.alertPhone(station));
+    public FireStationPersonsPhoneDto alertPhone(@RequestParam(name = "fireStation") String station){
+        return alertService.alertPhone(station);
     }
 
     /**
@@ -69,8 +50,8 @@ public class AlertController {
      * @return
      */
     @GetMapping("/childAlert")
-    public ResponseEntity<FireStationMedicalRecordsDto> alertChild(@RequestParam(name = "address") String address){
-        return ResponseEntity.ok(alertService.alertChild(address));
+    public FireStationMedicalRecordsDto alertChild(@RequestParam(name = "address") String address){
+        return alertService.alertChild(address);
     }
 
 

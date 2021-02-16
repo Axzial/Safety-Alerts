@@ -2,7 +2,6 @@ package fr.axzial.safetyalterts.util;
 
 import lombok.experimental.UtilityClass;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

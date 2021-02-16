@@ -6,7 +6,6 @@ import fr.axzial.safetyalterts.model.FireStation;
 import fr.axzial.safetyalterts.model.MedicalRecord;
 import fr.axzial.safetyalterts.model.Person;
 import fr.axzial.safetyalterts.repository.FireStationRepository;
-import fr.axzial.safetyalterts.repository.PersonRepository;
 import fr.axzial.safetyalterts.util.TimeUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Example;
