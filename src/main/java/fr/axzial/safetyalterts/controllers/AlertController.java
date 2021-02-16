@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,18 +29,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/alert")
 public class AlertController {
 
-    private final FireStationService fireStationService;
-    private final PersonService personService;
     private final AlertService alertService;
-    private final MedicalRecordService medicalRecordService;
 
     public AlertController(FireStationService fireStationService, PersonService personService, AlertService alertService, MedicalRecordService medicalRecordService) {
-        this.fireStationService = fireStationService;
-        this.personService = personService;
         this.alertService = alertService;
-        this.medicalRecordService = medicalRecordService;
     }
 
     /**
@@ -62,9 +58,7 @@ public class AlertController {
      */
     @GetMapping("/phoneAlert")
     public ResponseEntity<FireStationPersonsPhoneDto> alertPhone(@RequestParam(name = "fireStation") String station){
-        FireStation fireStation = fireStationService.getFireStationByStation(station).orElseThrow(FireStationNotFoundException::new);
-        List<Person> personList = personService.getPersonByCity(fireStation.getAddress());
-        return new ResponseEntity<>(new FireStationPersonsPhoneDto(fireStation, personList.stream().map(Person::getPhone).collect(Collectors.toList())), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(alertService.alertPhone(station), new HttpHeaders(), HttpStatus.OK);
     }
 
     /**
@@ -76,12 +70,7 @@ public class AlertController {
      */
     @GetMapping("/childAlert")
     public ResponseEntity<FireStationMedicalRecordsDto> alertChild(@RequestParam(name = "address") String address){
-        FireStation fireStation = fireStationService.getFireStationByAddress(address).orElseThrow(FireStationNotFoundException::new);
-        List<Person> personList = personService.getPersonByCity(fireStation.getAddress());
-        List<MedicalRecord> medicalRecords = medicalRecordService.getRecordsFromPersons(personList).stream()
-                .filter(e -> TimeUtils.getAgeFromBirthday(e.getBirthdate()) <= 18)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(new FireStationMedicalRecordsDto(fireStation, medicalRecords.stream().map(MedicalRecordMapper::mapChildMedicalRecordDto).collect(Collectors.toList())), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(alertService.alertChild(address), new HttpHeaders(), HttpStatus.OK);
     }
 
 
