@@ -18,7 +18,7 @@ public class Person {
 
     String lastName;
 
-    String adress;
+    String address;
 
     String city;
 
