@@ -30,9 +30,7 @@ public class PersonController {
      */
     @GetMapping("/communityEmails")
     public ResponseEntity<List<String>> getCityMails(@RequestParam(name = "city", required = true) String city){
-        List<String> mails = personService.getMailsByCity(city);
-        if (mails.isEmpty()) throw new MailNotFoundException();
-        return new ResponseEntity<>(mails, new HttpHeaders(), HttpStatus.OK);
+        return ResponseEntity.ok(personService.getMailsByCity(city));
     }
 
     /**
@@ -44,11 +42,9 @@ public class PersonController {
      * @return
      */
     @GetMapping("personInfo")
-    public List<Person> getPersonsInfos(@RequestParam(name = "firstName") String firstName,
+    public ResponseEntity<List<Person>> getPersonsInfos(@RequestParam(name = "firstName") String firstName,
     @RequestParam(name = "lastName") String lastName){
-        List<Person> persons = personService.getPersonsByNames(firstName, lastName);
-        if (persons.isEmpty()) throw new PersonNotFoundException();
-        return persons;
+        return ResponseEntity.ok(personService.getPersonsInfos(firstName, lastName));
     }
 
 }

@@ -58,7 +58,7 @@ public class AlertController {
      */
     @GetMapping("/phoneAlert")
     public ResponseEntity<FireStationPersonsPhoneDto> alertPhone(@RequestParam(name = "fireStation") String station){
-        return new ResponseEntity<>(alertService.alertPhone(station), new HttpHeaders(), HttpStatus.OK);
+        return ResponseEntity.ok(alertService.alertPhone(station));
     }
 
     /**
@@ -70,7 +70,7 @@ public class AlertController {
      */
     @GetMapping("/childAlert")
     public ResponseEntity<FireStationMedicalRecordsDto> alertChild(@RequestParam(name = "address") String address){
-        return new ResponseEntity<>(alertService.alertChild(address), new HttpHeaders(), HttpStatus.OK);
+        return ResponseEntity.ok(alertService.alertChild(address));
     }
 
 

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 public class FireStationController {
 
-    public static final int LEGAL_AGE = 18;
+
     FireStationService fireStationService;
     PersonService personService;
     MedicalRecordService medicalRecordService;
@@ -43,22 +43,13 @@ public class FireStationController {
      * @return
      */
     @GetMapping("/flood/stations")
-    public ResponseEntity<Map<String, List<Person>>> getFireStationWithPersons(
-            @RequestParam(name = "stations") List<String> stations
-    ){
-        List<FireStation> fireStations = fireStationService.getFireStationByIds(stations);
-        List<Person> personList = personService.getPersonByCities(fireStations.stream().map(FireStation::getAddress).collect(Collectors.toList()));
-        return new ResponseEntity<>(personList.stream().collect(Collectors.groupingBy(Person::getAddress, Collectors.toList())), new HttpHeaders(), HttpStatus.OK);
+    public ResponseEntity<Map<String, List<Person>>> getFireStationWithPersons(@RequestParam(name = "stations") List<String> stations){
+        return ResponseEntity.ok(fireStationService.getFireStationWithPersons(stations));
     }
 
     @GetMapping("/fireStation")
     public ResponseEntity<FireStationCountDto> getUsersFromFireStation(@RequestParam(name = "stationNumber") String stationNumber){
-        FireStation fireStation = fireStationService.getFireStationByStation(stationNumber).orElseThrow(FireStationNotFoundException::new);
-        List<Person> personList = personService.getPersonByCity(fireStation.getAddress());
-        List<MedicalRecord> medicalRecords = medicalRecordService.getRecordsFromPersons(personList);
-        long minors = medicalRecords.stream()
-                .filter(e -> TimeUtils.getAgeFromBirthday(e.getBirthdate()) <= LEGAL_AGE).count();
-        return new ResponseEntity<>(new FireStationCountDto(fireStation, personList, minors, medicalRecords.size() - minors), new HttpHeaders(), HttpStatus.OK);
+        return ResponseEntity.ok(fireStationService.getUsersFromFireStation(stationNumber));
     }
 
 }

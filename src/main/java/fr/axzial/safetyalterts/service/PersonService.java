@@ -13,4 +13,8 @@ public interface PersonService {
     List<Person> getPersonByCities(List<String> adresses);
 
     List<Person> getPersonByCity(String address);
+
+    List<String> getCityMails(String city);
+
+    List<Person> getPersonsInfos(String firstName, String lastName);
 }

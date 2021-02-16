@@ -1,5 +1,7 @@
 package fr.axzial.safetyalterts.service;
 
+import fr.axzial.safetyalterts.exception.MailNotFoundException;
+import fr.axzial.safetyalterts.exception.PersonNotFoundException;
 import fr.axzial.safetyalterts.model.Person;
 import fr.axzial.safetyalterts.repository.PersonRepository;
 import org.springframework.data.domain.Example;
@@ -18,10 +20,12 @@ import java.util.stream.Collectors;
 public class PersonServiceImpl implements PersonService {
 
     PersonRepository personRepository;
+    PersonService personService;
     EntityManager entityManager;
 
-    public PersonServiceImpl(PersonRepository personRepository, EntityManager entityManager) {
+    public PersonServiceImpl(PersonRepository personRepository, PersonService personService, EntityManager entityManager) {
         this.personRepository = personRepository;
+        this.personService = personService;
         this.entityManager = entityManager;
     }
 
@@ -56,5 +60,19 @@ public class PersonServiceImpl implements PersonService {
         Root<Person> root = cq.from(Person.class);
         cq.select(root).where(cb.equal(root.get("address"), address));
         return entityManager.createQuery(cq).getResultList();
+    }
+
+    @Override
+    public List<String> getCityMails(String city){
+        List<String> mails = personService.getMailsByCity(city);
+        if (mails.isEmpty()) throw new MailNotFoundException();
+        return mails;
+    }
+
+    @Override
+    public List<Person> getPersonsInfos(String firstName, String lastName){
+        List<Person> persons = personService.getPersonsByNames(firstName, lastName);
+        if (persons.isEmpty()) throw new PersonNotFoundException();
+        return persons;
     }
 }
