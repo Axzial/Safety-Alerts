@@ -9,12 +9,6 @@ import java.time.format.DateTimeFormatter;
 @UtilityClass
 public class TimeUtils {
 
-    public LocalDateTime getTimeStampFromBirthday(String birthday){
-        String pattern = "dd/mm/yyyy";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        return LocalDateTime.from(formatter.parse(birthday));
-    }
-
     public Integer getAgeFromBirthday(String birthday){
         String pattern = "dd/mm/yyyy";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
