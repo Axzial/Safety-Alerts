@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface FireStationService {
 
-    List<FireStation> getFireStationByIds(List<String> stations);
+    List<FireStation> getFireStationsByNames(List<String> stations);
 
     Optional<FireStation> getFireStationByAddress(String address);
 
