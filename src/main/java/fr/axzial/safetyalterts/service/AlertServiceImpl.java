@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,13 +33,14 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public FireStationPersonsDto alertFire(String address) {
-        FireStation fireStation = fireStationService.getFireStationByAddress(address).orElseThrow(FireStationNotFoundException::new);
-        List<Person> personList = personService.getPersonByCity(fireStation.getAddress());
-        if (CollectionUtils.isEmpty(personList)) {
+    public FireStationPersonsDto alertFire(String address) { ;
+        Optional<FireStation> fireStation = fireStationService.getFireStationByAddress(address);
+        if (fireStation.isEmpty()) throw new FireStationNotFoundException();
+        List<Person> personList = personService.getPersonByCity(fireStation.get().getAddress());
+        /*if (CollectionUtils.isEmpty(personList)) {
             throw new PersonNotFoundException();
-        }
-        return new FireStationPersonsDto(fireStation, personList);
+        }*/
+        return new FireStationPersonsDto(fireStation.get(), personList);
     }
 
     @Override
