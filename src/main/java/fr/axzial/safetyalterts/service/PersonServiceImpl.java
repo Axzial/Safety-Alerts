@@ -31,7 +31,7 @@ public class PersonServiceImpl implements PersonService {
     public List<String> getMailsByCity(String city){
         Person example = new Person();
         example.setCity(city);
-        return personRepository.findAll(Example.of(example)).stream().map(Person::getCity).collect(Collectors.toList());
+        return personRepository.findAll(Example.of(example)).stream().map(Person::getEmail).collect(Collectors.toList());
     }
 
     @Override
