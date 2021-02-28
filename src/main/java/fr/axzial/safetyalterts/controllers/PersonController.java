@@ -35,7 +35,7 @@ public class PersonController {
      * @param lastName
      * @return
      */
-    @GetMapping("personInfo")
+    @GetMapping("/personInfo")
     public List<Person> getPersonsInfos(@RequestParam(name = "firstName") String firstName,
     @RequestParam(name = "lastName") String lastName){
         return personService.getPersonsInfos(firstName, lastName);
