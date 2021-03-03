@@ -1,6 +1,7 @@
 package fr.axzial.safetyalterts.controllers;
 
-import fr.axzial.safetyalterts.dto.FireStationCountDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationCountDto;
+import fr.axzial.safetyalterts.model.FireStation;
 import fr.axzial.safetyalterts.model.Person;
 import fr.axzial.safetyalterts.service.FireStationService;
 import fr.axzial.safetyalterts.service.MedicalRecordService;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +40,14 @@ public class FireStationController {
         return fireStationService.getFireStationWithPersons(stations);
     }
 
-    @GetMapping("/fireStation")
+    @GetMapping("/firestation")
     public FireStationCountDto getUsersFromFireStation(@RequestParam(name = "stationNumber") String stationNumber){
-        return fireStationService.getUsersFromFireStation(stationNumber);
+        return fireStationService.getUsersFromFireStationNumber(stationNumber);
+    }
+
+    @GetMapping("/search")
+    public List<FireStation> test(@RequestParam(name = "stationAddress") String stationAddress){
+        return fireStationService.getFireStationsByNames(Collections.singletonList(stationAddress));
     }
 
 }

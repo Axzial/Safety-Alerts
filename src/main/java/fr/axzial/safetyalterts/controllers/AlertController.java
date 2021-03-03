@@ -1,8 +1,8 @@
 package fr.axzial.safetyalterts.controllers;
 
-import fr.axzial.safetyalterts.dto.FireStationMedicalRecordsDto;
-import fr.axzial.safetyalterts.dto.FireStationPersonsDto;
-import fr.axzial.safetyalterts.dto.FireStationPersonsPhoneDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationMedicalRecordsDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationPersonsDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationPersonsPhoneDto;
 import fr.axzial.safetyalterts.service.AlertService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

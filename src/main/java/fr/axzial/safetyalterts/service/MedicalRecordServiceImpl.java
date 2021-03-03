@@ -29,13 +29,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     @Override
     public List<MedicalRecord> getRecordsFromPersons(List<Person> personList){
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<MedicalRecord> cq = cb.createQuery(MedicalRecord.class);
-        Root<MedicalRecord> root = cq.from(MedicalRecord.class);
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.and(root.get("firstName").in(personList.stream().map(Person::getFirstName).collect(Collectors.toList()))));
-        predicates.add(cb.and(root.get("lastName").in(personList.stream().map(Person::getLastName).collect(Collectors.toList()))));
-        cq.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
-        return entityManager.createQuery(cq).getResultList();
+        return medicalRecordRepository
+                .findAllByLastNameInAndFirstNameIn(personList.stream().map(Person::getLastName).collect(Collectors.toList()), personList.stream().map(Person::getFirstName).collect(Collectors.toList()));
     }
 }

@@ -10,9 +10,9 @@ public interface PersonService {
 
     List<Person> getPersonsByNames(String firstName, String lastName);
 
-    List<Person> getPersonByCities(List<String> adresses);
+    List<Person> getPersonByAddresses(List<String> adresses);
 
-    List<Person> getPersonByCity(String address);
+    List<Person> getPersonByAddress(String address);
 
     List<String> getCityMails(String city);
 

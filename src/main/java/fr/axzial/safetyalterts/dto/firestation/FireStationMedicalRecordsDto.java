@@ -1,5 +1,6 @@
-package fr.axzial.safetyalterts.dto;
+package fr.axzial.safetyalterts.dto.firestation;
 
+import fr.axzial.safetyalterts.dto.ChildMedicalRecordDto;
 import fr.axzial.safetyalterts.model.FireStation;
 import lombok.AllArgsConstructor;
 import lombok.Data;

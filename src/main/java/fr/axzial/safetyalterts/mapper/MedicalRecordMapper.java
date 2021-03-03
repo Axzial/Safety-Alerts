@@ -13,7 +13,7 @@ public class MedicalRecordMapper {
 
     public ChildMedicalRecordDto mapChildMedicalRecordDto(MedicalRecord medicalRecord){
         ChildMedicalRecordDto childMedicalRecordDto = modelMapper.map(medicalRecord, ChildMedicalRecordDto.class);
-        childMedicalRecordDto.setAge(TimeUtils.getAgeFromBirthday(medicalRecord.getBirthdate()));
+        childMedicalRecordDto.setAge(TimeUtils.getAgeFromBirthday(medicalRecord.getBirth()));
         return childMedicalRecordDto;
     }
 

@@ -1,6 +1,6 @@
 package fr.axzial.safetyalterts.service;
 
-import fr.axzial.safetyalterts.dto.FireStationCountDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationCountDto;
 import fr.axzial.safetyalterts.model.FireStation;
 import fr.axzial.safetyalterts.model.Person;
 
@@ -16,7 +16,7 @@ public interface FireStationService {
 
     Optional<FireStation> getFireStationByStation(String station);
 
-    FireStationCountDto getUsersFromFireStation(String stationNumber);
+    FireStationCountDto getUsersFromFireStationNumber(String stationNumber);
 
     Map<String, List<Person>> getFireStationWithPersons(List<String> stations);
 }

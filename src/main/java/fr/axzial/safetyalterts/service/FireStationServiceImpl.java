@@ -1,6 +1,6 @@
 package fr.axzial.safetyalterts.service;
 
-import fr.axzial.safetyalterts.dto.FireStationCountDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationCountDto;
 import fr.axzial.safetyalterts.exception.FireStationNotFoundException;
 import fr.axzial.safetyalterts.model.FireStation;
 import fr.axzial.safetyalterts.model.MedicalRecord;
@@ -8,17 +8,10 @@ import fr.axzial.safetyalterts.model.Person;
 import fr.axzial.safetyalterts.repository.FireStationRepository;
 import fr.axzial.safetyalterts.util.TimeUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,20 +44,7 @@ public class FireStationServiceImpl implements FireStationService {
      */
     @Override
     public List<FireStation> getFireStationsByNames(List<String> stations) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<FireStation> cq = cb.createQuery(FireStation.class);
-        Root<FireStation> root = cq.from(FireStation.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-        if (!stations.isEmpty()){
-            stations.forEach(e -> {
-                predicates.add(cb.equal(root.get("station"), e));
-            });
-        }
-
-        cq.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
-
-        return entityManager.createQuery(cq).getResultList();
+        return fireStationRepository.findAllByStationIn(stations);
     }
 
     /**
@@ -74,16 +54,7 @@ public class FireStationServiceImpl implements FireStationService {
      */
     @Override
     public Optional<FireStation> getFireStationByAddress(String address){
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<FireStation> cq = cb.createQuery(FireStation.class);
-        Root<FireStation> root = cq.from(FireStation.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(root.get("address"), address));
-
-        cq.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
-
-        return entityManager.createQuery(cq).getResultList().stream().findAny();
+        return fireStationRepository.findOneByAddress(address);
     }
 
     /**
@@ -93,27 +64,35 @@ public class FireStationServiceImpl implements FireStationService {
      */
     @Override
     public Optional<FireStation> getFireStationByStation(String station) {
-        FireStation fireStation = new FireStation();
-        fireStation.setStation(station);
-        return fireStationRepository.findOne(Example.of(fireStation));
+        return fireStationRepository.findOneByStation(station);
     }
 
 
     @Override
-    public FireStationCountDto getUsersFromFireStation(String stationNumber){
-        FireStation fireStation = getFireStationByStation(stationNumber).orElseThrow(FireStationNotFoundException::new);
-        List<Person> personList = personService.getPersonByCity(fireStation.getAddress());
+    public FireStationCountDto getUsersFromFireStationNumber(String stationNumber){
+
+        Optional<FireStation> fireStation = getFireStationByStation(stationNumber);
+
+        if (fireStation.isEmpty()) throw new FireStationNotFoundException();
+
+        List<Person> personList = personService.getPersonByAddress(fireStation.get().getAddress());
         List<MedicalRecord> medicalRecords = medicalRecordService.getRecordsFromPersons(personList);
+
         long minors = medicalRecords.stream()
-                .filter(e -> TimeUtils.getAgeFromBirthday(e.getBirthdate()) <= LEGAL_AGE).count();
-        return new FireStationCountDto(fireStation, personList, minors, medicalRecords.size() - minors);
+                .filter(e -> TimeUtils.getAgeFromBirthday(e.getBirth()) <= LEGAL_AGE).count();
+
+        return new FireStationCountDto(fireStation.get(), personList, minors, medicalRecords.size() - minors);
     }
 
     @Override
     public Map<String, List<Person>> getFireStationWithPersons(List<String> stations){
+
         List<FireStation> fireStations = getFireStationsByNames(stations);
+
         if (fireStations.isEmpty()) throw new FireStationNotFoundException();
-        List<Person> personList = personService.getPersonByCities(fireStations.stream().map(FireStation::getAddress).collect(Collectors.toList()));
+
+        List<Person> personList = personService.getPersonByAddresses(fireStations.stream().map(FireStation::getAddress).collect(Collectors.toList()));
+
         return personList.stream().collect(Collectors.groupingBy(Person::getAddress, Collectors.toList()));
     }
 }

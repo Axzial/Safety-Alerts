@@ -1,25 +1,21 @@
-package fr.axzial.safetyalterts.model;
+package fr.axzial.safetyalterts.dto;
 
 import lombok.Data;
 
 import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Entity
 @Data
-@Table
-public class MedicalRecord {
+public class MedicalRecordDto {
 
     @Id
     String firstName;
 
     String lastName;
 
-    Timestamp birth;
+    String birthdate;
 
     @ElementCollection
     List<String> medications;

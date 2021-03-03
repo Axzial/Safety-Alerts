@@ -29,9 +29,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<String> getMailsByCity(String city){
-        Person example = new Person();
-        example.setCity(city);
-        return personRepository.findAll(Example.of(example)).stream().map(Person::getEmail).collect(Collectors.toList());
+        return personRepository.findAllByCity(city).stream().map(Person::getEmail).collect(Collectors.toList());
     }
 
     @Override
@@ -43,21 +41,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<Person> getPersonByCities(List<String> addresses){
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Person> cq = cb.createQuery(Person.class);
-        Root<Person> root = cq.from(Person.class);
-        cq.select(root).where(cb.and(root.get("address").in(addresses)));
-        return entityManager.createQuery(cq).getResultList();
+    public List<Person> getPersonByAddresses(List<String> addresses){
+       return personRepository.findAllByAddressIn(addresses);
     }
 
     @Override
-    public List<Person> getPersonByCity(String address){
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Person> cq = cb.createQuery(Person.class);
-        Root<Person> root = cq.from(Person.class);
-        cq.select(root).where(cb.equal(root.get("address"), address));
-        return entityManager.createQuery(cq).getResultList();
+    public List<Person> getPersonByAddress(String address){
+        return personRepository.findAllByAddress(address);
     }
 
     @Override

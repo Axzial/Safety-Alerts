@@ -1,8 +1,8 @@
 package fr.axzial.safetyalterts.service;
 
-import fr.axzial.safetyalterts.dto.FireStationMedicalRecordsDto;
-import fr.axzial.safetyalterts.dto.FireStationPersonsDto;
-import fr.axzial.safetyalterts.dto.FireStationPersonsPhoneDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationMedicalRecordsDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationPersonsDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationPersonsPhoneDto;
 
 public interface AlertService {
 

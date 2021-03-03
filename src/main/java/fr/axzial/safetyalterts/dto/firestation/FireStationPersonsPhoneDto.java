@@ -1,4 +1,4 @@
-package fr.axzial.safetyalterts.dto;
+package fr.axzial.safetyalterts.dto.firestation;
 
 import fr.axzial.safetyalterts.model.FireStation;
 import lombok.AllArgsConstructor;
