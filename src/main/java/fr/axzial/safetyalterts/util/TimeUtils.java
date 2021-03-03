@@ -19,16 +19,11 @@ public class TimeUtils {
 
     public Integer getAgeFromBirthday(Timestamp birthday){
         Calendar calendar = Calendar.getInstance();
-
-        int nowYear = calendar.get(Calendar.YEAR);
-        System.out.println(nowYear);
-
+        long nowMillis= calendar.getTimeInMillis();
         calendar.setTimeInMillis(birthday.getTime());
+        long birthMillis= calendar.getTimeInMillis();
 
-        int birthYear = calendar.get(Calendar.YEAR);
-        System.out.println(birthYear);
-
-        return nowYear - birthYear;
+        return Math.toIntExact((nowMillis - birthMillis) / (365L * 24 * 60 * 60 * 1000));
     }
 
     public Timestamp addYears(Timestamp ts, int years){
