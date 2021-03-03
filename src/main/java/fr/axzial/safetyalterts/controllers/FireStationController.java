@@ -46,9 +46,4 @@ public class FireStationController {
         return fireStationService.getUsersFromFireStationNumber(stationNumber);
     }
 
-    @GetMapping("/search")
-    public List<FireStation> test(@RequestParam(name = "stationAddress") String stationAddress){
-        return fireStationService.getFireStationsByNames(Collections.singletonList(stationAddress));
-    }
-
 }
