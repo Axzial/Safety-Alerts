@@ -64,7 +64,7 @@ public class FireStationServiceImpl implements FireStationService {
      */
     @Override
     public Optional<FireStation> getFireStationByStation(String station) {
-        return fireStationRepository.findOneByStation(station);
+        return fireStationRepository.findAllByStation(station).stream().findFirst();
     }
 
 
