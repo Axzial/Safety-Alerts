@@ -63,22 +63,7 @@ class AlertControllerTest {
 
     @BeforeEach
     void setUp() {
-        fireStation = new FireStation();
-        fireStation.setStation("CoolStation");
-        fireStation.setAddress("999");
-        person = new Person();
-        person.setFirstName("Victor");
-        person.setAddress("999");
 
-        fireStationRepo.save(fireStation);
-        personRepository.save(person);
-
-        PersonWithMedicationsDto personWithMedicationsDto = modelMapper.map(person, PersonWithMedicationsDto.class);
-        personWithMedicationsDto.setMedicalRecord(new MedicalRecord());
-
-        fireStationPersonsDto = new FireStationPersonsDto();
-        fireStationPersonsDto.setFireStation(fireStation);
-        fireStationPersonsDto.setPersonList(Collections.singletonList(personWithMedicationsDto));
     }
 
     @SneakyThrows
