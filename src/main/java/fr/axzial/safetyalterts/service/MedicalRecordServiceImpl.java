@@ -20,11 +20,9 @@ import java.util.stream.Collectors;
 public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     MedicalRecordRepository medicalRecordRepository;
-    EntityManager entityManager;
 
-    public MedicalRecordServiceImpl(MedicalRecordRepository medicalRecordRepository, EntityManager entityManager) {
+    public MedicalRecordServiceImpl(MedicalRecordRepository medicalRecordRepository) {
         this.medicalRecordRepository = medicalRecordRepository;
-        this.entityManager = entityManager;
     }
 
     @Override

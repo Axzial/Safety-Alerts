@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 
@@ -25,5 +26,11 @@ class TimeUtilsTest {
         Timestamp ts = TimeUtils.addYears(Timestamp.from(Instant.now()), -24);
         Integer i = TimeUtils.getAgeFromBirthday(ts);
         Assertions.assertEquals(24, i);
+    }
+
+    @Test
+    void getTimestampFromFormatTest(){
+        Timestamp i = TimeUtils.getTimestampFromFormat("12/12/2000");
+        assertEquals(TimeUtils.getAgeFromBirthday(i), 20);
     }
 }

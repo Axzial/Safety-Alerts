@@ -20,13 +20,11 @@ public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
     private final MedicalRecordService medicalRecordService;
-    private final EntityManager entityManager;
     private final ModelMapper modelMapper;
 
-    public PersonServiceImpl(PersonRepository personRepository, MedicalRecordService medicalRecordService, EntityManager entityManager) {
+    public PersonServiceImpl(PersonRepository personRepository, MedicalRecordService medicalRecordService) {
         this.personRepository = personRepository;
         this.medicalRecordService = medicalRecordService;
-        this.entityManager = entityManager;
         this.modelMapper = new ModelMapper();
     }
 
@@ -59,9 +57,13 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonWithMedicationsDto> getPersonsInfos(String firstName, String lastName){
+
         List<Person> persons = getPersonsByNames(firstName, lastName);
+
         if (persons.isEmpty()) throw new PersonNotFoundException();
+
         List<MedicalRecord> medicalRecords = medicalRecordService.getRecordsFromPersons(persons);
+
         return persons.stream().map(e -> {
             PersonWithMedicationsDto personWithMedicationsDto = modelMapper.map(e, PersonWithMedicationsDto.class);
             medicalRecords.stream()
