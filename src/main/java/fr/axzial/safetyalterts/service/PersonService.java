@@ -1,5 +1,6 @@
 package fr.axzial.safetyalterts.service;
 
+import fr.axzial.safetyalterts.dto.PersonWithMedicationsDto;
 import fr.axzial.safetyalterts.model.Person;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface PersonService {
 
     List<String> getCityMails(String city);
 
-    List<Person> getPersonsInfos(String firstName, String lastName);
+    List<PersonWithMedicationsDto> getPersonsInfos(String firstName, String lastName);
 }

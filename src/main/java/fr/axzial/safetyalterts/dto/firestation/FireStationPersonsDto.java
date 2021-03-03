@@ -1,5 +1,6 @@
 package fr.axzial.safetyalterts.dto.firestation;
 
+import fr.axzial.safetyalterts.dto.PersonWithMedicationsDto;
 import fr.axzial.safetyalterts.model.FireStation;
 import fr.axzial.safetyalterts.model.Person;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,6 @@ import java.util.List;
 public class FireStationPersonsDto {
 
     FireStation fireStation;
-    List<Person> personList;
+    List<PersonWithMedicationsDto> personList;
 
 }

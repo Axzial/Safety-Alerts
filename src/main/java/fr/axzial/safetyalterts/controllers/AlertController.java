@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/alert")
 public class AlertController {
 
     private final AlertService alertService;
@@ -34,12 +33,12 @@ public class AlertController {
     /**
      * Cette url doit retourner une liste des numéros de téléphone des résidents desservis par la caserne de
      * pompiers. Nous l'utiliserons pour envoyer des messages texte d'urgence à des foyers spécifiques
-     * @param station
+     * @param stationNumber
      * @return
      */
     @GetMapping("/phoneAlert")
-    public FireStationPersonsPhoneDto alertPhone(@RequestParam(name = "fireStation") String station){
-        return alertService.alertPhone(station);
+    public FireStationPersonsPhoneDto alertPhone(@RequestParam(name = "firestation") String stationNumber){
+        return alertService.alertPhone(stationNumber);
     }
 
     /**

@@ -1,8 +1,8 @@
 package fr.axzial.safetyalterts.service;
 
+import fr.axzial.safetyalterts.dto.PersonWithMedicationsDto;
 import fr.axzial.safetyalterts.dto.firestation.FireStationCountDto;
 import fr.axzial.safetyalterts.model.FireStation;
-import fr.axzial.safetyalterts.model.Person;
 
 import java.util.List;
 import java.util.Map;
@@ -18,5 +18,5 @@ public interface FireStationService {
 
     FireStationCountDto getUsersFromFireStationNumber(String stationNumber);
 
-    Map<String, List<Person>> getFireStationWithPersons(List<String> stations);
+    Map<String, List<PersonWithMedicationsDto>> getFireStationWithPersons(List<String> stations);
 }

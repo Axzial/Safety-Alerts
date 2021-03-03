@@ -1,5 +1,6 @@
 package fr.axzial.safetyalterts.controllers;
 
+import fr.axzial.safetyalterts.dto.PersonWithMedicationsDto;
 import fr.axzial.safetyalterts.dto.firestation.FireStationCountDto;
 import fr.axzial.safetyalterts.model.FireStation;
 import fr.axzial.safetyalterts.model.Person;
@@ -36,7 +37,7 @@ public class FireStationController {
      * @return
      */
     @GetMapping("/flood/stations")
-    public Map<String, List<Person>> getFireStationWithPersons(@RequestParam(name = "stations") List<String> stations){
+    public Map<String, List<PersonWithMedicationsDto>> getFireStationWithPersons(@RequestParam(name = "stations") List<String> stations){
         return fireStationService.getFireStationWithPersons(stations);
     }
 

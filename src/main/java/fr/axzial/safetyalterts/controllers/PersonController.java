@@ -1,5 +1,6 @@
 package fr.axzial.safetyalterts.controllers;
 
+import fr.axzial.safetyalterts.dto.PersonWithMedicationsDto;
 import fr.axzial.safetyalterts.model.Person;
 import fr.axzial.safetyalterts.service.PersonService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class PersonController {
      * @param city
      * @return
      */
-    @GetMapping("/communityEmails")
+    @GetMapping("/communityEmail")
     public List<String> getCityMails(@RequestParam(name = "city", required = true) String city){
         return personService.getMailsByCity(city);
     }
@@ -36,8 +37,8 @@ public class PersonController {
      * @return
      */
     @GetMapping("/personInfo")
-    public List<Person> getPersonsInfos(@RequestParam(name = "firstName") String firstName,
-    @RequestParam(name = "lastName") String lastName){
+    public List<PersonWithMedicationsDto> getPersonsInfos(@RequestParam(name = "firstName") String firstName,
+                                                          @RequestParam(name = "lastName") String lastName){
         return personService.getPersonsInfos(firstName, lastName);
     }
 

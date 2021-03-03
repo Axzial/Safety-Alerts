@@ -15,4 +15,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, JpaSpe
     List<Person> findAllByAddress(String address);
 
     List<Person> findAllByCity(String city);
+    
+    List<Person> findAllByLastNameInAndFirstNameIn(Collection<String> lastName, Collection<String> firstName);
+
+    List<Person> findAllByLastNameAndFirstName(String lastName, String firstName);
 }

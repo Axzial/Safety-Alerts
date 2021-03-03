@@ -1,5 +1,6 @@
 package fr.axzial.safetyalterts.service;
 
+import fr.axzial.safetyalterts.dto.PersonWithMedicationsDto;
 import fr.axzial.safetyalterts.dto.firestation.FireStationCountDto;
 import fr.axzial.safetyalterts.exception.FireStationNotFoundException;
 import fr.axzial.safetyalterts.model.FireStation;
@@ -54,7 +55,7 @@ public class FireStationServiceImpl implements FireStationService {
      */
     @Override
     public Optional<FireStation> getFireStationByAddress(String address){
-        return fireStationRepository.findOneByAddress(address);
+        return fireStationRepository.findAllByAddress(address).stream().findFirst();
     }
 
     /**
@@ -85,14 +86,21 @@ public class FireStationServiceImpl implements FireStationService {
     }
 
     @Override
-    public Map<String, List<Person>> getFireStationWithPersons(List<String> stations){
+    public Map<String, List<PersonWithMedicationsDto>> getFireStationWithPersons(List<String> stations){
 
         List<FireStation> fireStations = getFireStationsByNames(stations);
 
         if (fireStations.isEmpty()) throw new FireStationNotFoundException();
 
         List<Person> personList = personService.getPersonByAddresses(fireStations.stream().map(FireStation::getAddress).collect(Collectors.toList()));
+        List<MedicalRecord> medicalRecords = medicalRecordService.getRecordsFromPersons(personList);
 
-        return personList.stream().collect(Collectors.groupingBy(Person::getAddress, Collectors.toList()));
+        return personList.stream().map(e -> {
+            PersonWithMedicationsDto personWithMedicationsDto = modelMapper.map(e, PersonWithMedicationsDto.class);
+            medicalRecords.stream()
+                    .filter(x -> x.getFirstName().equalsIgnoreCase(e.getFirstName()) && x.getLastName().equalsIgnoreCase(e.getLastName()))
+                    .forEach(personWithMedicationsDto::setMedicalRecord);
+            return personWithMedicationsDto;
+        }).collect(Collectors.groupingBy(Person::getAddress, Collectors.toList()));
     }
 }

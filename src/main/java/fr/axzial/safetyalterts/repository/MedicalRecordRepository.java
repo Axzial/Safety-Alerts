@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, Integer>, JpaSpecificationExecutor<MedicalRecord> {
-    List<MedicalRecord> findAllByLastNameInAndFirstNameIn(Collection<String> collect, Collection<String> collect1);
+    List<MedicalRecord> findAllByLastNameInAndFirstNameIn(Collection<String> lastName, Collection<String> firstName);
 }

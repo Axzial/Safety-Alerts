@@ -1,17 +1,16 @@
 package fr.axzial.safetyalterts.service;
 
+import fr.axzial.safetyalterts.dto.PersonWithMedicationsDto;
 import fr.axzial.safetyalterts.exception.MailNotFoundException;
 import fr.axzial.safetyalterts.exception.PersonNotFoundException;
+import fr.axzial.safetyalterts.model.MedicalRecord;
 import fr.axzial.safetyalterts.model.Person;
 import fr.axzial.safetyalterts.repository.PersonRepository;
-import org.springframework.data.domain.Example;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,11 +19,15 @@ import java.util.stream.Collectors;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
+    private final MedicalRecordService medicalRecordService;
     private final EntityManager entityManager;
+    private final ModelMapper modelMapper;
 
-    public PersonServiceImpl(PersonRepository personRepository, EntityManager entityManager) {
+    public PersonServiceImpl(PersonRepository personRepository, MedicalRecordService medicalRecordService, EntityManager entityManager) {
         this.personRepository = personRepository;
+        this.medicalRecordService = medicalRecordService;
         this.entityManager = entityManager;
+        this.modelMapper = new ModelMapper();
     }
 
     @Override
@@ -34,10 +37,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<Person> getPersonsByNames(String firstName, String lastName) {
-        Person example = new Person();
-        example.setFirstName(firstName);
-        example.setLastName(lastName);
-        return personRepository.findAll(Example.of(example));
+        return personRepository.findAllByLastNameAndFirstName(lastName, firstName);
     }
 
     @Override
@@ -58,9 +58,16 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<Person> getPersonsInfos(String firstName, String lastName){
+    public List<PersonWithMedicationsDto> getPersonsInfos(String firstName, String lastName){
         List<Person> persons = getPersonsByNames(firstName, lastName);
         if (persons.isEmpty()) throw new PersonNotFoundException();
-        return persons;
+        List<MedicalRecord> medicalRecords = medicalRecordService.getRecordsFromPersons(persons);
+        return persons.stream().map(e -> {
+            PersonWithMedicationsDto personWithMedicationsDto = modelMapper.map(e, PersonWithMedicationsDto.class);
+            medicalRecords.stream()
+                    .filter(x -> x.getFirstName().equalsIgnoreCase(e.getFirstName()) && x.getLastName().equalsIgnoreCase(e.getLastName()))
+                    .forEach(personWithMedicationsDto::setMedicalRecord);
+            return personWithMedicationsDto;
+        }).collect(Collectors.toList());
     }
 }
