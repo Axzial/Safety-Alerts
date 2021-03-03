@@ -14,6 +14,7 @@
 ### Safety Alerts 🚨
 
 **Safety Alerts** is an school project that will alert user in case of emergency ! 🚨
+
 Made with Spring Boot. For OpenClassroom.
 
 ### Requirements 🧰
