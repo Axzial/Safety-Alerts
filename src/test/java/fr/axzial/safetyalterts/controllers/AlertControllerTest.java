@@ -1,35 +1,54 @@
 package fr.axzial.safetyalterts.controllers;
 
 import com.google.gson.Gson;
+import fr.axzial.safetyalterts.dto.PersonWithMedicationsDto;
+import fr.axzial.safetyalterts.dto.firestation.FireStationPersonsDto;
+import fr.axzial.safetyalterts.model.FireStation;
+import fr.axzial.safetyalterts.model.MedicalRecord;
+import fr.axzial.safetyalterts.model.Person;
+import fr.axzial.safetyalterts.repository.FireStationRepository;
+import fr.axzial.safetyalterts.repository.PersonRepository;
 import fr.axzial.safetyalterts.service.AlertService;
 import fr.axzial.safetyalterts.service.FireStationService;
 import fr.axzial.safetyalterts.service.MedicalRecordService;
 import fr.axzial.safetyalterts.service.PersonService;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.*;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-@WebMvcTest(AlertController.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+import java.util.ArrayList;
+import java.util.Collections;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = AlertController.class)
 class AlertControllerTest {
 
-    private static final String ENDPOINT_URL = "/alert";
+    ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private MockMvc mockMvc;
 
     @MockBean
     FireStationService fireStationService;
     @MockBean
+    FireStationRepository fireStationRepo;
+    @MockBean
     PersonService personService;
+    @MockBean
+    PersonRepository personRepository;
     @MockBean
     AlertService alertService;
     @MockBean
@@ -38,39 +57,55 @@ class AlertControllerTest {
     @Autowired
     AlertController alertController;
 
-    @Autowired
-    private MockMvc mockMvc;
+    private FireStation fireStation;
+    private Person person;
+    private FireStationPersonsDto fireStationPersonsDto;
 
-    Gson gson = new Gson();
-
-    @BeforeAll
+    @BeforeEach
     void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(alertController).build();
+        fireStation = new FireStation();
+        fireStation.setStation("CoolStation");
+        fireStation.setAddress("999");
+        person = new Person();
+        person.setFirstName("Victor");
+        person.setAddress("999");
+
+        fireStationRepo.save(fireStation);
+        personRepository.save(person);
+
+        PersonWithMedicationsDto personWithMedicationsDto = modelMapper.map(person, PersonWithMedicationsDto.class);
+        personWithMedicationsDto.setMedicalRecord(new MedicalRecord());
+
+        fireStationPersonsDto = new FireStationPersonsDto();
+        fireStationPersonsDto.setFireStation(fireStation);
+        fireStationPersonsDto.setPersonList(Collections.singletonList(personWithMedicationsDto));
     }
 
     @SneakyThrows
     @Test
     void alertFire() {
-        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_URL + "/fire")
+        mockMvc.perform(MockMvcRequestBuilders.get("/fire")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("address", "test"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .param("address", "999"))
+                .andExpect(status().isOk())
+                .andReturn();
+
     }
 
     @SneakyThrows
     @Test
     void alertPhone() {
-        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_URL + "/phoneAlert")
-                .contentType(MediaType.APPLICATION_JSON).param("fireStation", "void"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/phoneAlert")
+                .contentType(MediaType.APPLICATION_JSON).param("firestation", "void"))
+                .andExpect(status().isOk());
     }
 
     @SneakyThrows
     @Test
     void alertChild() {
-        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_URL + "/childAlert")
+        mockMvc.perform(MockMvcRequestBuilders.get("/childAlert")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("address", "test"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
     }
 }
