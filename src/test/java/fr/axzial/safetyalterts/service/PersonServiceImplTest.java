@@ -136,6 +136,27 @@ class PersonServiceImplTest {
     }
 
     @Test
+    void getPersonByAdress(){
+        Person person1 = new Person();
+        person1.setFirstName("Vic");
+        person1.setLastName("tor");
+        person1.setAddress("999");
+        person1.setCity("Hyrule");
+        person1.setEmail("test@mail");
+        Person person2 = new Person();
+        person2.setFirstName("Yac");
+        person2.setLastName("ine");
+        person2.setAddress("999");
+        person2.setCity("Hyrule");
+        person2.setEmail("testing@mail");
+
+        when(personRepository.findAllByAddress(any())).thenReturn(Arrays.asList(person1, person2));
+
+        List<Person> persons = personService.getPersonByAddress("999");
+        assertEquals(2, persons.size());
+    }
+
+    @Test
     void getCityMails() {
 
         Person person1 = new Person();

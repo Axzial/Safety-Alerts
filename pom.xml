@@ -94,7 +94,17 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.6</version>
+				<version>0.8.5</version>
+				<configuration>
+					<excludes>
+						<!-- Exclude class from test coverage -->
+						<exclude>**/model/*.class</exclude>
+						<exclude>**/exception/*.class</exclude>
+						<exclude>**/dto/**/*.class</exclude>
+						<exclude>**/SafetyAlertsApplication.class</exclude>
+					</excludes>
+				</configuration>
+
 				<executions>
 					<execution>
 						<goals>
@@ -102,7 +112,7 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>report</id>
+						<id>jacoco-report</id>
 						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
