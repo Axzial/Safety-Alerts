@@ -150,4 +150,35 @@ class FireStationServiceImplTest {
         assertEquals(fireStations.size(), 1);
         assertIterableEquals(fireStations.get("999"), Collections.singleton(person));
     }
+
+    @Test
+    void getFireStationWithPersonsFiltered() {
+        FireStation fireStation = new FireStation();
+        fireStation.setStation("TESTING");
+        fireStation.setAddress("999");
+        fireStation.setId(0);
+
+        Person person = new Person();
+        person.setFirstName("Yac");
+        person.setLastName("ine");
+        person.setAddress("999");
+
+        MedicalRecord medicalRecord1 = new MedicalRecord();
+        medicalRecord1.setFirstName("Vic");
+        medicalRecord1.setLastName("tor");
+        medicalRecord1.setBirth(TimeUtils.addYears(Timestamp.from(Instant.now()), -27));
+        MedicalRecord medicalRecord2 = new MedicalRecord();
+        medicalRecord2.setFirstName("Yac");
+        medicalRecord2.setLastName("ine");
+        medicalRecord2.setBirth(TimeUtils.addYears(Timestamp.from(Instant.now()), -12));
+
+        when(fireStationRepository.findAllByStationIn(anyCollection())).thenReturn(Collections.singletonList(fireStation));
+        when(personService.getPersonByAddresses(Collections.singletonList(fireStation.getAddress()))).thenReturn(Collections.singletonList(person));
+        when(medicalRecordService.getRecordsFromPersons(anyList())).thenReturn(Arrays.asList(medicalRecord1, medicalRecord2));
+
+        Map<String, List<PersonWithMedicationsDto>> fireStations = fireStationService.getFireStationWithPersons(Collections.singletonList("TESTING"));
+
+        assertEquals(fireStations.size(), 1);
+        assertIterableEquals(fireStations.get("999"), Collections.singleton(person));
+    }
 }

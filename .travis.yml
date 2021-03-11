@@ -1,0 +1,21 @@
+#Lang
+language: java
+
+#Build Env
+dist: xenial
+sudo: true
+
+#Jdk
+jdk:
+  - openjdk11
+
+script:
+  - chmod +x send.sh
+  - mvn clean package
+  - mvn cobertura:cobertura
+
+before_install:
+  - chmod +x mvnw
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
