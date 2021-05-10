@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  safety-rest:
+    container_name: safety-rest
+    restart: always
+    env_file: .env
